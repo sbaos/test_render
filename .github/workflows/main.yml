@@ -4,42 +4,45 @@ on:
   push:
     branches: [main]
 
-
 jobs:
-
   test:
-    name: Test
+    name: Test & Build
     runs-on: ubuntu-latest
 
-    strategy: 
+    strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.x]
 
     steps:
-      - name: Checkout 
-        uses: actions/checkout@v3 # was "v2" before 
-        with: 
+      - name: Checkout
+        uses: actions/checkout@v3
+        with:
           fetch-depth: 0
 
       - name: Use Node.JS ${{ matrix.node-version }}
-        uses: actions/setup-node@v3 # was "v2" before
-        with: 
+        uses: actions/setup-node@v3
+        with:
           node-version: ${{ matrix.node-version }}
 
-      - name: NPM install, build
-        run: |
-          npm install
-          npm run build
-          npm start 
-        env: 
+      - name: Install dependencies
+        run: npm install
+
+      - name: Build NestJS
+        run: npm run build
+
+      - name: Run tests (optional)
+        run: npm test --if-present
+        env:
           DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
-
-  # Heavily modified deploy job to fit render.com
   deploy:
+    name: Deploy to Render
+    needs: [test]
     runs-on: ubuntu-latest
+
     steps:
-      - uses: JorgeLNJunior/render-deploy@v1.4.6
+      - name: Deploy Service
+        uses: JorgeLNJunior/render-deploy@v1.4.6
         with:
           service_id: ${{ secrets.RENDER_SERVICE_ID }}
           api_key: ${{ secrets.RENDER_API_KEY }}
