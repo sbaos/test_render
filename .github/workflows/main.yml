@@ -30,10 +30,10 @@ jobs:
       - name: Build NestJS
         run: npm run build
 
-      - name: Run tests (optional)
-        run: npm run start --if-present
-        env:
-          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      # - name: Run tests (optional)
+      #   run: npm run start --if-present
+      #   env:
+      #     DATABASE_URL: ${{ secrets.DATABASE_URL }}
 
   deploy:
     name: Deploy to Render
