@@ -1,0 +1,46 @@
+name: Node.JS CI/CD
+
+on:
+  push:
+    branches: [main]
+
+
+jobs:
+
+  test:
+    name: Test
+    runs-on: ubuntu-latest
+
+    strategy: 
+      matrix:
+        node-version: [18.x]
+
+    steps:
+      - name: Checkout 
+        uses: actions/checkout@v3 # was "v2" before 
+        with: 
+          fetch-depth: 0
+
+      - name: Use Node.JS ${{ matrix.node-version }}
+        uses: actions/setup-node@v3 # was "v2" before
+        with: 
+          node-version: ${{ matrix.node-version }}
+
+      - name: NPM install, build
+        run: |
+          npm install
+          npm run build
+          npm start 
+        env: 
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+
+
+  # Heavily modified deploy job to fit render.com
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: JorgeLNJunior/render-deploy@v1.4.6
+        with:
+          service_id: ${{ secrets.RENDER_SERVICE_ID }}
+          api_key: ${{ secrets.RENDER_API_KEY }}
+          wait_deploy: true
