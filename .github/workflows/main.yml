@@ -3,6 +3,8 @@ name: Node.JS CI/CD with Docker on Render
 on:
   push:
     branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
   build-test-docker:
@@ -42,19 +44,4 @@ jobs:
       - name: Save Docker image as tar
         run: docker save $IMAGE_NAME:$IMAGE_TAG -o $IMAGE_NAME.tar
 
-  deploy:
-    name: Deploy to Render
-    needs: [build-test-docker]
-    runs-on: ubuntu-latest
-
-    steps:
-      - name: Checkout
-        uses: actions/checkout@v3
-
-      - name: Deploy Docker image to Render
-        uses: JorgeLNJunior/render-deploy@v1.4.6
-        with:
-          service_id: ${{ secrets.RENDER_SERVICE_ID }}
-          api_key: ${{ secrets.RENDER_API_KEY }}
-          wait_deploy: true
-          dockerfile_path: ./Dockerfile
+ 
