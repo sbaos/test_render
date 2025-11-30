@@ -12,7 +12,7 @@ import { AppService } from './app.service';
       type: 'postgres',
       url: process.env.DATABASE_URL,
       entities: [User],
-      synchronize: true, // DEV ONLY
+      synchronize: true, 
       ssl: { rejectUnauthorized: false }, // nếu DB online yêu cầu SSL (heroku, cloud)
     }),
     TypeOrmModule.forFeature([User]), // inject repository in UsersModule
