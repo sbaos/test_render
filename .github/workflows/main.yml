@@ -58,4 +58,3 @@ jobs:
           api_key: ${{ secrets.RENDER_API_KEY }}
           wait_deploy: true
           dockerfile_path: ./Dockerfile
-          build_command: docker build -t my-nestjs-app:latest .
