@@ -43,5 +43,16 @@ jobs:
       # Save image as tar (Render CLI có thể load)
       - name: Save Docker image as tar
         run: docker save $IMAGE_NAME:$IMAGE_TAG -o $IMAGE_NAME.tar
-
+  deploy:
+      name: Deploy to Render
+      needs: [build-test-docker]
+      runs-on: ubuntu-latest
+  
+      steps:
+        - name: Deploy Service
+          uses: JorgeLNJunior/render-deploy@v1.4.6
+          with:
+            service_id: ${{ secrets.RENDER_SERVICE_ID }}
+            api_key: ${{ secrets.RENDER_API_KEY }}
+            wait_deploy: true
  
