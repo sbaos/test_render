@@ -6,7 +6,7 @@ on:
   pull_request:
     branches: [main]
 
-jobs:
+jobs:   
   build-test-docker:
     name: Build, Test & Dockerize
     runs-on: ubuntu-latest
